@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES5",
+    "sourceMap": true,
+    "inlineSources": true,
+    "jsx": "react",
+    "baseUrl": "./src",
+    "importHelpers": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  }
+}

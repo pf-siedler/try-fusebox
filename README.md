@@ -190,5 +190,100 @@ patch(document.querySelector("#app"), view(window.location.href));
 ## 静的ファイルのコピー
 
 index.htmlをdistに置くのがなんか気持ち悪いので、publicディレクトリに入れて、実行時にdistにコピーするようにしたい
+ついでにfaviconとかも適当に使ってみる（https://favicon.io/favicon-generator/）
 
-https://favicon.io/favicon-generator/
+```js
+src(["index.html", "favicon.ico"], { base: "public" })
+    .dest("dist")
+    .exec();
+```
+
+## Pluginを使えばindex.htmlを用意する必要も無いんです！
+
+↑でやる必要はなくて、WebIndexPluginを使うといい感じのindex.htmlを勝手に作ってくれる
+
+```js
+const fuse = FuseBox.init({
+    // 中略
+    plugins: [WebIndexPlugin({ title: "My Page" })],
+});
+```
+
+distにindex.htmlができてる。（インデントがめちゃくちゃなのはご愛嬌）
+
+これだと`div#app`がなくて動かない。
+テンプレートからhtmlを作る方法もあるらしい。
+scriptタグを入れてほしい箇所に`$bundles`と書いたhtmlファイルを用意する。
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>My Page</title>
+</head>
+<body>
+  <div id="app"></div>
+  $bundles
+</body>
+</html>
+```
+
+```js
+    plugins: [WebIndexPlugin({ template: "public/template.html" })],
+```
+
+これでいい感じに動く
+
+## cssを使う
+
+cssもいじる。最近はAltCSSが使われることが多い。私も業務ではstylusを使っている。
+FuseBoxにはだいたいのAltCSS用のpluginがデフォルトで用意されている。
+
+```js
+    plugins: [[StylusPlugin(), CSSPlugin()], WebIndexPlugin({ template: "src/public/template.html" })],
+```
+
+適当にstylusファイルを作る
+
+```styl
+// sub.styl
+$myColor = #ff0000
+
+// main.styl
+@import "sub.styl";
+
+h1
+  color $myColor
+```
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>My Page</title>
+</head>
+$css
+<body>
+  <div id="app"></div>
+  $bundles
+</body>
+</html>
+```
+
+スタイルが適応される。これはcssファイルを書き出すのではなく、htmlにinlineでstyleを書き込むらしい（ココらへんはconfigで変えられそうだけど）。
+
+## まとめ
+
+とりあえず動かすところまでやった。
+TSのトランスパイル周りは結構いい感じな気がする。
+cssとか、今回紹介しなかったtask runner周りが絡んでくるとconfigがごちゃごちゃしてくる感じがする。
+↑ドキュメントが少ないのもあいまって
+
+速さに関して、体感時間的にはイライラするレベルで待たされることは無いとだけ言っておきます。
+（ココらへんを客観的に語るなら他のモジュールバンドラーとの比較検証が必須になるけど、面倒なので。サンプルで書いたコードも短いし）

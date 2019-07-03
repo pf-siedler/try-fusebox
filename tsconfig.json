@@ -5,6 +5,7 @@
     "sourceMap": true,
     "inlineSources": true,
     "jsx": "react",
+    "jsxFactory": "SnabbdomPragma.createElement",
     "baseUrl": "./src",
     "importHelpers": true,
     "emitDecoratorMetadata": true,

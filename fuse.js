@@ -7,6 +7,11 @@ const fuse = FuseBox.init({
     sourceMaps: { vendor: true, inline: true },
 });
 
-fuse.bundle("app").instructions(`> index.ts`);
+fuse.dev({ port: 8888, hmr: true });
+
+fuse.bundle("app")
+    .instructions(`> index.ts`)
+    .watch()
+    .hmr();
 
 fuse.run();

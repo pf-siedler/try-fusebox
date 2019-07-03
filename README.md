@@ -65,6 +65,7 @@ node fuse
 ```
 
 `dist/app.js`と`dist/app.js`が出力される。
+また、`.fusebox`というcacheファイルも生成される（ファイルを更新したのに反映されない的な不具合があったらコレを消すとよさそう）
 
 ```js
 // app.js の一部
@@ -108,4 +109,80 @@ var showMessage = function (m) {
 }
 ```
 
-`target`等の諸々の設定がfuse.js通りなってるので、最初にfuse.js書いてtsconfigを生成してもらう使い方もできそう？
+## devサーバーを使う
+
+まず`dist/index.html`を用意します
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script src="./app.js"></script>
+</body>
+</html>
+```
+
+`fuse.js`にdevを入れます
+
+```js
+fuse.dev({
+    port: 8888 // port番号。デフォルトは4444。
+});
+
+fuse.bundle("app")
+    .instructions(`> index.ts`)
+    .watch() // tsを書き換えるたびに差分コンパイルを行う
+    .hmr(); // hot module replacementを有効にする
+```
+
+[http://localhost:8888](http://localhost:8888)にアクセスすると「📢 Hello World」が表示されます。
+devサーバーはoutputディレクトリをルートするので、distに`index.html`とか`favicon.ico`とかを入れておくと自動的に読み込まれます。
+
+> つまづきポイント
+> fuse.bundle()より後ろの行でfuse.dev({ports:8888})を呼んだところ、
+> HMRの接続先がws://localhost:4444になって動かなかった
+
+HMRが有効なのでブラウザの再読込を押さなくても変更が画面に反映されます。
+
+## TSXにも対応してるんだって
+
+react等で使われているjsx記法にも対応している。
+実際に使ってみる。今回は私が使い慣れているのでsnabbdom-pragmaというJSXライブラリを用いる。
+
+```shell
+yarn add snabbdom snabbdom-pragma
+```
+
+適当にtsx記法で書かれたソースコードを用意します。
+
+```tsx
+import * as SnabbdomPragma from "snabbdom-pragma";
+
+export function view(URL: string) {
+    return (
+        <div>
+            <h1>Hello World</h1>
+            <p>This page is written by snabbdom-pragma</p>
+            <p>{URL}</p>
+        </div>
+    );
+}
+```
+
+`index.ts`でこいつを読み取って、ブラウザに表示させます。
+
+```ts
+import * as snabbdom from "snabbdom";
+import { view } from "./view";
+
+const patch = snabbdom.init([]);
+patch(document.querySelector("#app"), view(window.location.href));
+```
+
+動く。

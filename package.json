@@ -9,5 +9,9 @@
     "fuse-box": "^3.7.1",
     "prettier": "^1.18.2",
     "typescript": "^3.5.2"
+  },
+  "dependencies": {
+    "snabbdom": "^0.7.3",
+    "snabbdom-pragma": "^2.8.0"
   }
 }

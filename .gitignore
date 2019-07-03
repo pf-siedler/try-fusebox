@@ -1,5 +1,7 @@
 node_modules/
-dist/
 .fusebox/
 
 yarn-error.log
+
+dist/*
+!dist/index.html

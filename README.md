@@ -186,3 +186,9 @@ patch(document.querySelector("#app"), view(window.location.href));
 ```
 
 動く。
+
+## 静的ファイルのコピー
+
+index.htmlをdistに置くのがなんか気持ち悪いので、publicディレクトリに入れて、実行時にdistにコピーするようにしたい
+
+https://favicon.io/favicon-generator/

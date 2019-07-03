@@ -1,3 +1,4 @@
+const { src, exec } = require("fuse-box/sparky");
 const { FuseBox } = require("fuse-box");
 
 const fuse = FuseBox.init({
@@ -7,11 +8,15 @@ const fuse = FuseBox.init({
     sourceMaps: { vendor: true, inline: true },
 });
 
+src(["index.html", "favicon.ico"], { base: "public" })
+    .dest("dist")
+    .exec();
+
 fuse.dev({ port: 8888, hmr: true });
 
 fuse.bundle("app")
     .instructions(`> index.ts`)
     .watch()
-    .hmr();
+    .hmr({ reload: true });
 
 fuse.run();

@@ -1,6 +1,6 @@
 # FuseBoxを使ってみる
 
-[FuseBox](https://github.com/fuse-box/fuse-box)というイケてるモジュールバンドラーがあるらしいので使ってみる.
+[FuseBox](https://github.com/fuse-box/fuse-box)というイケてるモジュールバンドラーがあるらしいので使ってみる。
 
 ## どこらへんがイケてるのか
 
@@ -87,7 +87,7 @@ var showMessage = function (m) {
 };
 ```
 
-いい感じにES5に置き換えられてる。
+ES5に置き換えられてる。
 
 `tsconfig`を定義していない場合、src以下に自動生成される。
 
@@ -111,7 +111,7 @@ var showMessage = function (m) {
 
 ## devサーバーを使う
 
-まず`dist/index.html`を用意します
+まず`dist/index.html`を用意しする。
 
 ```html
 <!DOCTYPE html>
@@ -128,7 +128,7 @@ var showMessage = function (m) {
 </html>
 ```
 
-`fuse.js`にdevを入れます
+`fuse.js`にdevを入れる。
 
 ```js
 fuse.dev({
@@ -141,14 +141,14 @@ fuse.bundle("app")
     .hmr(); // hot module replacementを有効にする
 ```
 
-[http://localhost:8888](http://localhost:8888)にアクセスすると「📢 Hello World」が表示されます。
-devサーバーはoutputディレクトリをルートするので、distに`index.html`とか`favicon.ico`とかを入れておくと自動的に読み込まれます。
+[http://localhost:8888](http://localhost:8888)にアクセスすると「📢 Hello World」が表示される。
+devサーバーはoutputディレクトリをルートするので、distに`index.html`とか`favicon.ico`とかを入れておくと自動的に読み込まれる。
 
 > つまづきポイント
 > fuse.bundle()より後ろの行でfuse.dev({ports:8888})を呼んだところ、
 > HMRの接続先がws://localhost:4444になって動かなかった
 
-HMRが有効なのでブラウザの再読込を押さなくても変更が画面に反映されます。
+HMRが有効なのでブラウザの再読込を押さなくても変更が画面に反映される。
 
 ## TSXにも対応してるんだって
 
@@ -159,7 +159,7 @@ react等で使われているjsx記法にも対応している。
 yarn add snabbdom snabbdom-pragma
 ```
 
-適当にtsx記法で書かれたソースコードを用意します。
+適当にtsx記法で書かれたソースコードを用意する。
 
 ```tsx
 import * as SnabbdomPragma from "snabbdom-pragma";
@@ -189,8 +189,8 @@ patch(document.querySelector("#app"), view(window.location.href));
 
 ## 静的ファイルのコピー
 
-index.htmlをdistに置くのがなんか気持ち悪いので、publicディレクトリに入れて、実行時にdistにコピーするようにしたい
-ついでにfaviconとかも適当に使ってみる（https://favicon.io/favicon-generator/）
+`index.html`を`dist/`に置くのがなんか気持ち悪いので、publicディレクトリに入れて、実行時に`dist/`へコピーするようにしたい。
+ついでにfaviconとかも適当に使ってみる（favicon作成は[このサイト](https://favicon.io/favicon-generator/)を使った）。
 
 ```js
 src(["index.html", "favicon.ico"], { base: "public" })
@@ -198,7 +198,7 @@ src(["index.html", "favicon.ico"], { base: "public" })
     .exec();
 ```
 
-## Pluginを使えばindex.htmlを用意する必要も無いんです！
+## Pluginを使えばindex.htmlを用意する必要も無い
 
 ↑でやる必要はなくて、WebIndexPluginを使うといい感じのindex.htmlを勝手に作ってくれる
 
@@ -209,7 +209,7 @@ const fuse = FuseBox.init({
 });
 ```
 
-distにindex.htmlができてる。（インデントがめちゃくちゃなのはご愛嬌）
+`dist/`に`index.html`ができている（インデントがめちゃくちゃなのはご愛嬌）。
 
 これだと`div#app`がなくて動かない。
 テンプレートからhtmlを作る方法もあるらしい。
@@ -239,8 +239,9 @@ scriptタグを入れてほしい箇所に`$bundles`と書いたhtmlファイル
 
 ## cssを使う
 
-cssもいじる。最近はAltCSSが使われることが多い。私も業務ではstylusを使っている。
-FuseBoxにはだいたいのAltCSS用のpluginがデフォルトで用意されている。
+`CSS`もいじる。最近は素の`CSS`よりも`AltCSS`がよく使われている。
+私も業務では`Stylus`を使っている。
+FuseBoxにはだいたいの`AltCSS`用のpluginがデフォルトで用意されている。
 
 ```js
     plugins: [[StylusPlugin(), CSSPlugin()], WebIndexPlugin({ template: "src/public/template.html" })],
@@ -280,10 +281,10 @@ $css
 
 ## まとめ
 
-とりあえず動かすところまでやった。
+とりあえず動かすところまでやってみた。
 TSのトランスパイル周りは結構いい感じな気がする。
 cssとか、今回紹介しなかったtask runner周りが絡んでくるとconfigがごちゃごちゃしてくる感じがする。
 ↑ドキュメントが少ないのもあいまって
 
-速さに関して、体感時間的にはイライラするレベルで待たされることは無いとだけ言っておきます。
+速さに関して、体感時間的にはイライラするレベルで待たされることは無いとだけ言っておく。
 （ココらへんを客観的に語るなら他のモジュールバンドラーとの比較検証が必須になるけど、面倒なので。サンプルで書いたコードも短いし）
